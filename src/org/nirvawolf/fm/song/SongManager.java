@@ -6,9 +6,7 @@
 package org.nirvawolf.fm.song;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import org.nirvawolf.douban.api.channel.Channel;
 import org.nirvawolf.douban.api.song.RequestDelegate;

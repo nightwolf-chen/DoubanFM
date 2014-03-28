@@ -90,7 +90,7 @@ implements ChannelUpdatorDelegate,Serializable
        if(currentUpdatorIndex >= this.updators.size()){
            updatetime = new TimeTool().getCurrentTime();
            this.notifySubNodesReady();
-           System.out.print(this.channels.toString());
+//           System.out.print(this.channels.toString());
        }else{
            this.start();
        }

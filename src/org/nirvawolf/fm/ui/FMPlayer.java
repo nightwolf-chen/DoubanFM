@@ -5,6 +5,10 @@
  */
 package org.nirvawolf.fm.ui;
 
+import java.util.Map;
+import javazoom.jlgui.basicplayer.BasicController;
+import javazoom.jlgui.basicplayer.BasicPlayerEvent;
+import javazoom.jlgui.basicplayer.BasicPlayerListener;
 import org.nirvawolf.douban.api.channel.Channel;
 import org.nirvawolf.douban.api.song.Song;
 import org.nirvawolf.fm.chain.BootChainNode;
@@ -17,7 +21,9 @@ import org.nirvawolf.fm.user.UserManager;
  *
  * @author bruce
  */
-public class FMPlayer extends BootChainNode {
+public class FMPlayer 
+extends BootChainNode 
+implements BasicPlayerListener{
 
     private final BasicPlayerAdaptor player = new BasicPlayerAdaptor();
     private Song currentSong;
@@ -30,6 +36,7 @@ public class FMPlayer extends BootChainNode {
         this.userManager = UserManager.sharedInstance();
         this.channelManager = ChannelManager.sharedInstance();
         this.songManager = SongManager.sharedInstance();
+        player.addBasicPlayerListener(this);
     }
 
     @Override
@@ -44,6 +51,27 @@ public class FMPlayer extends BootChainNode {
         
         this.player.open(currentSong.songUrl);
         this.player.play();
+    }
+
+    @Override
+    public void opened(Object o, Map map) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void progress(int i, long l, byte[] bytes, Map map) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void stateUpdated(BasicPlayerEvent bpe) {
+        System.out.println(bpe.toString());
+       
+    }
+
+    @Override
+    public void setController(BasicController bc) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
