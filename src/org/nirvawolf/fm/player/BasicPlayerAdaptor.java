@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package org.nirvawolf.fm.play;
+package org.nirvawolf.fm.player;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,10 +36,12 @@ public class BasicPlayerAdaptor {
         
     }
     
-    public void open(URL url){
+    public void open(String url){
         try {
-            this.controller.open(url);
+            this.controller.open(new URL(url));
         } catch (BasicPlayerException ex) {
+            Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

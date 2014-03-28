@@ -6,8 +6,7 @@
 
 package org.nirvawolf.fm.ui;
 
-import org.nirvawolf.fm.play.BasicPlayerAdaptor;
-import org.nirvawolf.fm.play.MusicPlayerTest;
+import org.nirvawolf.fm.chain.BootChain;
 
 /**
  *
@@ -18,10 +17,12 @@ public class PlayerMain extends javax.swing.JFrame {
     /**
      * Creates new form PlayerMain
      */
-    BasicPlayerAdaptor player = null;
+    BootChain bootChain;
+    FMPlayer fmPlayer = new FMPlayer();
     public PlayerMain() {
         initComponents();
-        player = new BasicPlayerAdaptor(); 
+        bootChain = new BootChain(fmPlayer);
+        bootChain.start();
     }
 
     /**
@@ -94,12 +95,12 @@ public class PlayerMain extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        this.player.play();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        this.player.pause();
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**

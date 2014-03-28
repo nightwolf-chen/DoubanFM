@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template ais the editor.
  */
-package org.nirvawolf.fm.play;
+package org.nirvawolf.fm.player;
 
 import java.io.IOException;
 import java.io.InputStream;

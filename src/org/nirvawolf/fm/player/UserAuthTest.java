@@ -1,4 +1,4 @@
-package org.nirvawolf.fm.play;
+package org.nirvawolf.fm.player;
 
 
 import org.nirvawolf.douban.api.channel.ChannelUpdateResult;
