@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.nirvawolf.fm.player;
 
 import java.net.MalformedURLException;
@@ -20,23 +19,26 @@ import javazoom.jlgui.basicplayer.BasicPlayerListener;
  * @author bruce
  */
 public class BasicPlayerAdaptor {
-    
-    private final BasicPlayer player = new BasicPlayer() ;
+
+    private BasicPlayer player;
     private BasicController controller;
-    
-    public BasicPlayerAdaptor(){
-        
+
+    public BasicPlayerAdaptor() {
+        this.createPlayer();
+    }
+
+    private void createPlayer() {
         try {
-            this.controller = (BasicController)player;
+            this.player = new BasicPlayer();
+            this.controller = (BasicController) player;
             this.controller.setGain(0.85);
             this.controller.setPan(0);
         } catch (BasicPlayerException ex) {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
-    
-    public void open(String url){
+
+    public void open(String url) {
         try {
             this.controller.open(new URL(url));
         } catch (BasicPlayerException ex) {
@@ -45,60 +47,64 @@ public class BasicPlayerAdaptor {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void play(){
+
+    public void play() {
         try {
             this.controller.play();
         } catch (BasicPlayerException ex) {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void pause(){
+
+    public void pause() {
         try {
             this.controller.pause();
         } catch (BasicPlayerException ex) {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void stop(){
+
+    public void stop() {
         try {
             this.controller.stop();
         } catch (BasicPlayerException ex) {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void resume(){
+
+    public void resume() {
         try {
             this.controller.resume();
         } catch (BasicPlayerException ex) {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void seek(long l){
+
+    public void seek(long l) {
         try {
             this.controller.seek(l);
         } catch (BasicPlayerException ex) {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void addBasicPlayerListener(BasicPlayerListener listener){
+
+    public void addBasicPlayerListener(BasicPlayerListener listener) {
         this.player.addBasicPlayerListener(listener);
     }
-    
-    public void setVolume(double v){
+
+    public void setVolume(double v) {
         try {
             this.controller.setGain(v);
         } catch (BasicPlayerException ex) {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void setPan(double p){
-        this.setPan(p);
+
+    public void setPan(double p) {
+        try {
+            this.controller.setPan(p);
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

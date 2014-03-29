@@ -42,10 +42,14 @@ public class FMPlayer extends FMBootChainNode {
         currentSong = songManager.getASong();
 
         if (currentSong == null) {
+            System.out.println("Got a null song , try to get a new song.");
             songManager.start();
         } else {
+            
+            this.player.stop();
             this.player.open(currentSong.songUrl);
             this.player.play();
+            
             for(FMPlayerListener l : this.listeners){
                 l.didFinishLoadSong();
             }
@@ -75,4 +79,13 @@ public class FMPlayer extends FMBootChainNode {
         this.listeners.add(listener);
     }
 
+    public Song getCurrentSong() {
+        return currentSong;
+    }
+
+    public Channel getCurrentChannel() {
+        return currentChannel;
+    }
+
+    
 }

@@ -33,11 +33,14 @@ public class SongManager
     private Channel currentChannel;
 
     public static synchronized SongManager sharedInstance() {
+        
         if (instance == null) {
             
             instance = (SongManager) restoreFromFile(SongManager.class);
             if (instance == null) {
                 instance = new SongManager();
+            }else{
+                instance.removeAllSongs();
             }
             
         }
@@ -101,6 +104,10 @@ public class SongManager
         }
 
         this.notifySubNodesReady();
+    }
+    
+    public void removeAllSongs(){
+        this.songs.clear();
     }
 
 }
