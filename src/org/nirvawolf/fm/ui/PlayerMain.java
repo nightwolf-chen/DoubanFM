@@ -6,7 +6,11 @@
 
 package org.nirvawolf.fm.ui;
 
-import org.nirvawolf.fm.chain.BootChain;
+import java.util.Map;
+import javazoom.jlgui.basicplayer.BasicController;
+import javazoom.jlgui.basicplayer.BasicPlayerEvent;
+import javazoom.jlgui.basicplayer.BasicPlayerListener;
+import org.nirvawolf.fm.chain.FMBootChain;
 
 /**
  *
@@ -17,11 +21,12 @@ public class PlayerMain extends javax.swing.JFrame {
     /**
      * Creates new form PlayerMain
      */
-    BootChain bootChain;
-    FMPlayer fmPlayer = new FMPlayer();
+    FMBootChain bootChain = FMBootChain.sharedInstance();
+    FMPlayer fmPlayer = bootChain.getPlayer();
+    
     public PlayerMain() {
         initComponents();
-        bootChain = new BootChain(fmPlayer);
+        fmPlayer.addListener(new ConcreteFMListener());
         bootChain.start();
     }
 
@@ -143,4 +148,5 @@ public class PlayerMain extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     // End of variables declaration//GEN-END:variables
+
 }

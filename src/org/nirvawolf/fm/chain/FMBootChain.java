@@ -5,34 +5,52 @@
  */
 package org.nirvawolf.fm.chain;
 
+import org.nirvawolf.douban.concurrent.ExecutorServiceManager;
 import org.nirvawolf.fm.channels.ChannelManager;
 import org.nirvawolf.fm.song.SongManager;
+import org.nirvawolf.fm.ui.FMPlayer;
 import org.nirvawolf.fm.user.UserManager;
 
 /**
  *
  * @author bruce
  */
-public class BootChain {
+public class FMBootChain {
+
+    private static FMBootChain instance;
 
     public static enum MANAGER_TYEP {
+
         USER, CHANNEL, SONG, UIPLAYER
     };
 
     private UserManager userManager;
     private ChannelManager channelManager;
     private SongManager songManager;
-    private BootChainNode uiPlayer;
+    private FMPlayer player;
 
-    public BootChain(BootChainNode uiPlayer) {
+    private FMBootChain() {
+
         this.userManager = UserManager.sharedInstance();
         this.channelManager = ChannelManager.sharedInstance();
         this.songManager = SongManager.sharedInstance();
-        this.uiPlayer = uiPlayer;
+
+        this.player = new FMPlayer();
+
+        userManager.removeAllSubNodes();
+        channelManager.removeAllSubNodes();
+        songManager.removeAllSubNodes();
 
         userManager.addSubNode(channelManager);
         channelManager.addSubNode(songManager);
-        songManager.addSubNode(uiPlayer);
+        songManager.addSubNode(player);
+    }
+
+    public static synchronized FMBootChain sharedInstance() {
+        if (instance == null) {
+            instance = new FMBootChain();
+        }
+        return instance;
     }
 
     public void start() {
@@ -46,22 +64,41 @@ public class BootChain {
                 this.userManager.start();
             }
             break;
-                
+
             case CHANNEL: {
                 this.channelManager.start();
             }
             break;
-                
+
             case SONG: {
                 this.songManager.start();
             }
             break;
-                
+
             case UIPLAYER: {
-                this.uiPlayer.start();
+                this.player.start();
             }
             break;
         }
+    }
+
+    public void serialize() {
+
+        ExecutorServiceManager.defaultExecutor.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                System.out.println("saving managers...");
+                userManager.serializeToFile();
+                channelManager.serializeToFile();
+                songManager.serializeToFile();
+            }
+        });
+
+    }
+
+    public FMPlayer getPlayer() {
+        return player;
     }
 
 }

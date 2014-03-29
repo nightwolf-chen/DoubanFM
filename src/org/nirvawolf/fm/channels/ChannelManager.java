@@ -17,14 +17,14 @@ import org.nirvawolf.douban.api.channel.ChannelUpdatorDelegate;
 import org.nirvawolf.douban.api.channel.DynamicChannelsUpdator;
 import org.nirvawolf.douban.api.channel.StableChannelsUpdator;
 import org.nirvawolf.douban.util.TimeTool;
-import org.nirvawolf.fm.chain.BootChainNode;
+import org.nirvawolf.fm.chain.FMBootChainNode;
 
 /**
  *
  * @author bruce
  */
 public class ChannelManager 
-extends BootChainNode
+extends FMBootChainNode
 implements ChannelUpdatorDelegate,Serializable
 {
 
@@ -41,7 +41,12 @@ implements ChannelUpdatorDelegate,Serializable
     public static synchronized ChannelManager sharedInstance(){
         
         if(instance == null){
-            instance = new ChannelManager();
+            
+            instance = (ChannelManager) restoreFromFile(ChannelManager.class);
+           
+            if(instance == null){
+                instance = new ChannelManager();
+            }
         }
         
         return instance;

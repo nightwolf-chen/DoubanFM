@@ -5,13 +5,11 @@
  */
 package org.nirvawolf.fm.ui;
 
-import java.util.Map;
-import javazoom.jlgui.basicplayer.BasicController;
-import javazoom.jlgui.basicplayer.BasicPlayerEvent;
-import javazoom.jlgui.basicplayer.BasicPlayerListener;
+import java.util.ArrayList;
+import java.util.List;
 import org.nirvawolf.douban.api.channel.Channel;
 import org.nirvawolf.douban.api.song.Song;
-import org.nirvawolf.fm.chain.BootChainNode;
+import org.nirvawolf.fm.chain.FMBootChainNode;
 import org.nirvawolf.fm.channels.ChannelManager;
 import org.nirvawolf.fm.player.BasicPlayerAdaptor;
 import org.nirvawolf.fm.song.SongManager;
@@ -21,9 +19,7 @@ import org.nirvawolf.fm.user.UserManager;
  *
  * @author bruce
  */
-public class FMPlayer 
-extends BootChainNode 
-implements BasicPlayerListener{
+public class FMPlayer extends FMBootChainNode {
 
     private final BasicPlayerAdaptor player = new BasicPlayerAdaptor();
     private Song currentSong;
@@ -31,47 +27,52 @@ implements BasicPlayerListener{
     private UserManager userManager;
     private ChannelManager channelManager;
     private SongManager songManager;
+    private List<FMPlayerListener> listeners = new ArrayList<FMPlayerListener>();
 
     public FMPlayer() {
         this.userManager = UserManager.sharedInstance();
         this.channelManager = ChannelManager.sharedInstance();
         this.songManager = SongManager.sharedInstance();
-        player.addBasicPlayerListener(this);
     }
 
     @Override
     public void start() {
-        
+
         this.currentChannel = songManager.getCurrentChannel();
         currentSong = songManager.getASong();
-        
-        if(currentSong == null){
+
+        if (currentSong == null) {
             songManager.start();
+        } else {
+            this.player.open(currentSong.songUrl);
+            this.player.play();
+            for(FMPlayerListener l : this.listeners){
+                l.didFinishLoadSong();
+            }
         }
-        
-        this.player.open(currentSong.songUrl);
-        this.player.play();
+
     }
 
-    @Override
-    public void opened(Object o, Map map) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void resume() {
+        this.player.resume();
     }
 
-    @Override
-    public void progress(int i, long l, byte[] bytes, Map map) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void pause() {
+        this.player.pause();
     }
 
-    @Override
-    public void stateUpdated(BasicPlayerEvent bpe) {
-        System.out.println(bpe.toString());
-       
+    public void next() {
+        this.start();
     }
 
-    @Override
-    public void setController(BasicController bc) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setChannel(Channel channel) {
+        this.songManager.setCurrentChannel(channel);
+        songManager.start();
+    }
+
+    public void addListener(FMPlayerListener listener) {
+        this.player.addBasicPlayerListener(listener);
+        this.listeners.add(listener);
     }
 
 }

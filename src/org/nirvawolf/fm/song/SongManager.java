@@ -15,7 +15,7 @@ import org.nirvawolf.douban.api.song.Song;
 import org.nirvawolf.douban.api.song.SongRequest;
 import org.nirvawolf.douban.api.song.SongRequestInfo;
 import org.nirvawolf.douban.api.user.User;
-import org.nirvawolf.fm.chain.BootChainNode;
+import org.nirvawolf.fm.chain.FMBootChainNode;
 import org.nirvawolf.fm.channels.ChannelManager;
 import org.nirvawolf.fm.user.UserManager;
 
@@ -24,7 +24,7 @@ import org.nirvawolf.fm.user.UserManager;
  * @author bruce
  */
 public class SongManager
-        extends BootChainNode
+        extends FMBootChainNode
         implements RequestDelegate, Serializable {
 
     private static SongManager instance;
@@ -34,13 +34,18 @@ public class SongManager
 
     public static synchronized SongManager sharedInstance() {
         if (instance == null) {
-            instance = new SongManager();
+            
+            instance = (SongManager) restoreFromFile(SongManager.class);
+            if (instance == null) {
+                instance = new SongManager();
+            }
+            
         }
         return instance;
     }
 
     private SongManager() {
-       
+
     }
 
     public Song getASong() {
@@ -52,8 +57,6 @@ public class SongManager
     public Channel getCurrentChannel() {
         return currentChannel;
     }
-    
-    
 
     public void setCurrentChannel(Channel currentChannel) {
         this.currentChannel = currentChannel;
@@ -71,11 +74,11 @@ public class SongManager
     public void start() {
 
         this.currentChannel = ChannelManager.sharedInstance().getARandomChannel();
-        
+
         SongRequestInfo info = new SongRequestInfo();
-        
+
         info.channel = currentChannel;
-        
+
         User user = UserManager.sharedInstance().getCurrentUser();
         info.user = user;
 
