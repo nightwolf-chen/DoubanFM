@@ -5,7 +5,6 @@
  */
 package org.nirvawolf.fm.chain;
 
-import org.nirvawolf.douban.concurrent.ExecutorServiceManager;
 import org.nirvawolf.fm.channels.ChannelManager;
 import org.nirvawolf.fm.song.SongManager;
 import org.nirvawolf.fm.ui.FMPlayer;
@@ -84,7 +83,7 @@ public class FMBootChain {
 
     public void serialize() {
 
-        ExecutorServiceManager.defaultExecutor.execute(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
 
             @Override
             public void run() {
@@ -94,6 +93,8 @@ public class FMBootChain {
                 songManager.serializeToFile();
             }
         });
+        
+        thread.start();
 
     }
 

@@ -21,7 +21,7 @@ import org.nirvawolf.fm.user.UserManager;
  */
 public class FMPlayer extends FMBootChainNode {
 
-    private final BasicPlayerAdaptor player = new BasicPlayerAdaptor();
+    private BasicPlayerAdaptor player;
     private Song currentSong;
     private Channel currentChannel;
     private UserManager userManager;
@@ -37,36 +37,51 @@ public class FMPlayer extends FMBootChainNode {
 
     @Override
     public void start() {
+        this.play();
+    }
 
+    public void resume() {
+        if (this.player != null) {
+            this.player.resume();
+        }
+    }
+
+    public void pause() {
+        if (this.player != null) {
+            this.player.pause();
+        }
+    }
+
+    public void next() {
+        this.play();
+    }
+
+    public void play() {
         this.currentChannel = songManager.getCurrentChannel();
         currentSong = songManager.getASong();
+
+        if (this.player != null) {
+            this.stop();
+        }
+
+        this.player = new BasicPlayerAdaptor();
+        this.addListenersToPlayer(player);
 
         if (currentSong == null) {
             System.out.println("Got a null song , try to get a new song.");
             songManager.start();
         } else {
-            
-            this.player.stop();
             this.player.open(currentSong.songUrl);
             this.player.play();
-            
-            for(FMPlayerListener l : this.listeners){
-                l.didFinishLoadSong();
-            }
+            this.notifyListeners();
         }
-
     }
 
-    public void resume() {
-        this.player.resume();
-    }
-
-    public void pause() {
-        this.player.pause();
-    }
-
-    public void next() {
-        this.start();
+    public void stop() {
+        if (this.player != null) {
+            this.player.stop();
+            this.player = null;
+        }
     }
 
     public void setChannel(Channel channel) {
@@ -75,7 +90,6 @@ public class FMPlayer extends FMBootChainNode {
     }
 
     public void addListener(FMPlayerListener listener) {
-        this.player.addBasicPlayerListener(listener);
         this.listeners.add(listener);
     }
 
@@ -87,5 +101,15 @@ public class FMPlayer extends FMBootChainNode {
         return currentChannel;
     }
 
-    
+    private void notifyListeners() {
+        for (FMPlayerListener l : this.listeners) {
+            l.didFinishLoadSong();
+        }
+    }
+
+    private void addListenersToPlayer(BasicPlayerAdaptor player) {
+        for (FMPlayerListener listener : this.listeners) {
+            this.player.addBasicPlayerListener(listener);
+        }
+    }
 }

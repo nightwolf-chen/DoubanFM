@@ -33,16 +33,16 @@ public class SongManager
     private Channel currentChannel;
 
     public static synchronized SongManager sharedInstance() {
-        
+
         if (instance == null) {
-            
+
             instance = (SongManager) restoreFromFile(SongManager.class);
             if (instance == null) {
                 instance = new SongManager();
-            }else{
+            } else {
                 instance.removeAllSongs();
             }
-            
+
         }
         return instance;
     }
@@ -76,7 +76,9 @@ public class SongManager
     @Override
     public void start() {
 
-        this.currentChannel = ChannelManager.sharedInstance().getARandomChannel();
+        if (this.currentChannel == null) {
+            this.currentChannel = ChannelManager.sharedInstance().getARandomChannel();
+        }
 
         SongRequestInfo info = new SongRequestInfo();
 
@@ -105,8 +107,8 @@ public class SongManager
 
         this.notifySubNodesReady();
     }
-    
-    public void removeAllSongs(){
+
+    public void removeAllSongs() {
         this.songs.clear();
     }
 

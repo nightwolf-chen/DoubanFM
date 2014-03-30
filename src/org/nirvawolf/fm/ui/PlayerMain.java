@@ -36,7 +36,6 @@ implements FMPlayerListener{
     
     public PlayerMain() {
         initComponents();
-        fmPlayer.addListener(new ConcreteFMListener());
         fmPlayer.addListener(this);
         bootChain.start();
     }
@@ -70,6 +69,8 @@ implements FMPlayerListener{
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(" fm.nirvawolf.com");
+        setPreferredSize(new java.awt.Dimension(460, 180));
+        setResizable(false);
 
         jButton1.setText("next");
         jButton1.setBounds(new java.awt.Rectangle(0, 0, 100, 30));
@@ -144,7 +145,10 @@ implements FMPlayerListener{
             .addGroup(layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel4))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -156,22 +160,22 @@ implements FMPlayerListener{
                             .addComponent(jButton2)
                             .addComponent(jButton3)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(8, 8, 8)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4)
                             .addComponent(jButton5)
-                            .addComponent(jButton7))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel4)
-                .addContainerGap(8, Short.MAX_VALUE))
+                            .addComponent(jButton7)))))
         );
+
+        getAccessibleContext().setAccessibleName("music.nirvawolf.com");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        this.fmPlayer.start();
+        this.fmPlayer.stop();
+        this.fmPlayer.next();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -237,7 +241,7 @@ implements FMPlayerListener{
 
     @Override
     public void didFinishLoadSong() {
-        
+        FMBootChain.sharedInstance().serialize();
     }
 
     @Override
@@ -250,16 +254,16 @@ implements FMPlayerListener{
     @Override
     public void progress(int i, long l, byte[] bytes, Map map) {
        
-        for(Object keyObjec : map.keySet()){
-            System.out.print(keyObjec+"=>");
-            System.out.println(map.get(keyObjec));
-            
-        }
+//        for(Object keyObjec : map.keySet()){
+//            System.out.print(keyObjec+"=>");
+//            System.out.println(map.get(keyObjec));
+//            
+//        }
     }
 
     @Override
     public void stateUpdated(BasicPlayerEvent bpe) {
-        if(bpe.getCode() == BasicPlayerEvent.STOPPED){
+        if(bpe.getCode() == BasicPlayerEvent.EOM){
             this.fmPlayer.start();
         }
     }
