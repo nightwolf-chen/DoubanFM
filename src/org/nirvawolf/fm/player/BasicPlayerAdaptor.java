@@ -31,7 +31,7 @@ public class BasicPlayerAdaptor {
         try {
             this.player = new BasicPlayer();
             this.controller = (BasicController) player;
-            this.controller.setGain(0.85);
+            this.controller.setGain(0.5);
             this.controller.setPan(0);
         } catch (BasicPlayerException ex) {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);

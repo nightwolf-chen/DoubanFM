@@ -36,7 +36,7 @@ implements ChannelUpdatorDelegate,Serializable
     
     private int currentUpdatorIndex;
     private String updatetime;
-    private final long updateGap = 1000 * 60 * 60 * 24 * 7;
+    private final long updateGap = 1000 * 60 * 60 * 24 * 30;
     
     public static synchronized ChannelManager sharedInstance(){
         
@@ -95,6 +95,7 @@ implements ChannelUpdatorDelegate,Serializable
        if(currentUpdatorIndex >= this.updators.size()){
            updatetime = new TimeTool().getCurrentTime();
            this.notifySubNodesReady();
+           currentUpdatorIndex = 0;
 //           System.out.print(this.channels.toString());
        }else{
            this.start();
@@ -110,13 +111,16 @@ implements ChannelUpdatorDelegate,Serializable
         }
         
         TimeTool tt = new TimeTool();
-        long gap = tt.calculateDiscance(updatetime, tt.getCurrentTime());
+        String uTime = updatetime;
+        String cTime = tt.getCurrentTime();
+        long gap = tt.calculateDiscance(uTime, cTime);
         
-        if(gap > 0 && gap < this.updateGap){
+        if((gap >= this.updateGap) || (gap <= 0)){
+            return true;
+        } else {
             return false;
         }
-        
-        return true;
+          
     }
     
     public static void main(String[] args){

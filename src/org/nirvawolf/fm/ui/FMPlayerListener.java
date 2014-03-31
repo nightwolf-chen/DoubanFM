@@ -14,4 +14,5 @@ import javazoom.jlgui.basicplayer.BasicPlayerListener;
  */
 public interface FMPlayerListener extends BasicPlayerListener{
     public void didFinishLoadSong();
+    public void startToLoadSong();
 }

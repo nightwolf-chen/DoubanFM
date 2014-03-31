@@ -129,6 +129,11 @@ implements FMPlayerListener{
         jSlider1.setMinimumSize(new java.awt.Dimension(190, 30));
         jSlider1.setPreferredSize(new java.awt.Dimension(190, 30));
         jSlider1.setSize(new java.awt.Dimension(190, 30));
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
+            }
+        });
 
         jLabel1.setLocation(new java.awt.Point(155, 125));
         jLabel1.setMaximumSize(new java.awt.Dimension(155, 125));
@@ -203,10 +208,11 @@ implements FMPlayerListener{
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -236,6 +242,11 @@ implements FMPlayerListener{
         // TODO add your handling code here:
         this.fmPlayer.resume();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+        // TODO add your handling code here:
+        this.setVolume();
+    }//GEN-LAST:event_jSlider1StateChanged
 
     /**
      * @param args the command line arguments
@@ -288,6 +299,11 @@ implements FMPlayerListener{
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
+     @Override
+    public void startToLoadSong() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     @Override
     public void didFinishLoadSong() {
         FMBootChain.sharedInstance().serialize();
@@ -295,6 +311,7 @@ implements FMPlayerListener{
 
     @Override
     public void opened(Object o, Map map) {
+        this.setVolume();
         this.loadAndShowImg(this.fmPlayer.getCurrentSong());
         this.showSongInfo(this.fmPlayer.getCurrentSong());
         this.showChannelInfo(this.fmPlayer.getCurrentChannel());
@@ -339,11 +356,18 @@ implements FMPlayerListener{
     }
     
     private void showSongInfo(Song song){
-        this.jLabel2.setText(song.songTitle+" "+song.artist+" "+song.albumTitle);
+        this.jLabel2.setText("歌曲:"+song.songTitle+" 艺术家："+song.artist+" 专辑："+song.albumTitle);
     }
     
     private void showChannelInfo(Channel channel){
         this.jLabel3.setText("频道:"+channel.chineseName);
     }
+
+    private void setVolume(){
+        double volume = (double)this.jSlider1.getValue() / 100.0;
+        System.out.println("volume:"+volume);
+        this.fmPlayer.setVolume(volume);
+    }
+   
 
 }

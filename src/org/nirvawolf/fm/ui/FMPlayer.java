@@ -83,6 +83,12 @@ public class FMPlayer extends FMBootChainNode {
             this.player = null;
         }
     }
+    
+    public void setVolume(double v){
+        if(this.player != null){
+            this.player.setVolume(v);
+        }
+    }
 
     public void setChannel(Channel channel) {
         this.songManager.setCurrentChannel(channel);
