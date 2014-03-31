@@ -17,6 +17,7 @@ import org.nirvawolf.douban.api.song.SongRequestInfo;
 import org.nirvawolf.douban.api.user.User;
 import org.nirvawolf.fm.chain.FMBootChainNode;
 import org.nirvawolf.fm.channels.ChannelManager;
+import org.nirvawolf.fm.channels.DynamicChannelManager;
 import org.nirvawolf.fm.user.UserManager;
 
 /**
@@ -77,7 +78,7 @@ public class SongManager
     public void start() {
 
         if (this.currentChannel == null) {
-            this.currentChannel = ChannelManager.sharedInstance().getARandomChannel();
+            this.currentChannel = DynamicChannelManager.sharedInstance().getARandomChannel();
         }
 
         SongRequestInfo info = new SongRequestInfo();

@@ -11,6 +11,7 @@ import org.nirvawolf.douban.api.channel.Channel;
 import org.nirvawolf.douban.api.song.Song;
 import org.nirvawolf.fm.chain.FMBootChainNode;
 import org.nirvawolf.fm.channels.ChannelManager;
+import org.nirvawolf.fm.channels.StableChannelManager;
 import org.nirvawolf.fm.player.BasicPlayerAdaptor;
 import org.nirvawolf.fm.song.SongManager;
 import org.nirvawolf.fm.user.UserManager;
@@ -31,7 +32,7 @@ public class FMPlayer extends FMBootChainNode {
 
     public FMPlayer() {
         this.userManager = UserManager.sharedInstance();
-        this.channelManager = ChannelManager.sharedInstance();
+        this.channelManager = StableChannelManager.sharedInstance();
         this.songManager = SongManager.sharedInstance();
     }
 

@@ -6,6 +6,8 @@
 package org.nirvawolf.fm.chain;
 
 import org.nirvawolf.fm.channels.ChannelManager;
+import org.nirvawolf.fm.channels.DynamicChannelManager;
+import org.nirvawolf.fm.channels.StableChannelManager;
 import org.nirvawolf.fm.song.SongManager;
 import org.nirvawolf.fm.ui.FMPlayer;
 import org.nirvawolf.fm.user.UserManager;
@@ -24,24 +26,28 @@ public class FMBootChain {
     };
 
     private UserManager userManager;
-    private ChannelManager channelManager;
+    private ChannelManager stableChannelManager;
+    private ChannelManager dynamicChannelManager;
     private SongManager songManager;
     private FMPlayer player;
 
     private FMBootChain() {
 
         this.userManager = UserManager.sharedInstance();
-        this.channelManager = ChannelManager.sharedInstance();
+        this.stableChannelManager = StableChannelManager.sharedInstance();
+        this.dynamicChannelManager = DynamicChannelManager.sharedInstance();
         this.songManager = SongManager.sharedInstance();
 
         this.player = new FMPlayer();
 
         userManager.removeAllSubNodes();
-        channelManager.removeAllSubNodes();
+        stableChannelManager.removeAllSubNodes();
+        dynamicChannelManager.removeAllSubNodes();
         songManager.removeAllSubNodes();
 
-        userManager.addSubNode(channelManager);
-        channelManager.addSubNode(songManager);
+        userManager.addSubNode(stableChannelManager);
+        stableChannelManager.addSubNode(songManager);
+//        dynamicChannelManager.addSubNode(songManager);
         songManager.addSubNode(player);
     }
 
@@ -65,7 +71,7 @@ public class FMBootChain {
             break;
 
             case CHANNEL: {
-                this.channelManager.start();
+                this.stableChannelManager.start();
             }
             break;
 
@@ -89,7 +95,8 @@ public class FMBootChain {
             public void run() {
                 System.out.println("saving managers...");
                 userManager.serializeToFile();
-                channelManager.serializeToFile();
+                stableChannelManager.serializeToFile();
+                dynamicChannelManager.serializeToFile();
                 songManager.serializeToFile();
             }
         });

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.nirvawolf.fm.channels;
 
 import java.io.Serializable;
@@ -14,8 +13,6 @@ import org.nirvawolf.douban.api.channel.Channel;
 import org.nirvawolf.douban.api.channel.ChannelUpdateResult;
 import org.nirvawolf.douban.api.channel.ChannelUpdator;
 import org.nirvawolf.douban.api.channel.ChannelUpdatorDelegate;
-import org.nirvawolf.douban.api.channel.DynamicChannelsUpdator;
-import org.nirvawolf.douban.api.channel.StableChannelsUpdator;
 import org.nirvawolf.douban.util.TimeTool;
 import org.nirvawolf.fm.chain.FMBootChainNode;
 
@@ -23,108 +20,71 @@ import org.nirvawolf.fm.chain.FMBootChainNode;
  *
  * @author bruce
  */
-public class ChannelManager 
-extends FMBootChainNode
-implements ChannelUpdatorDelegate,Serializable
-{
+public class ChannelManager
+        extends FMBootChainNode
+        implements ChannelUpdatorDelegate, Serializable {
 
-    private static ChannelManager instance;
-    
-    private final List<Channel> channels = new ArrayList();
-    private final List<ChannelUpdator> updators = new ArrayList<ChannelUpdator>();
-    private Map<String,String> channelCategories;
-    
-    private int currentUpdatorIndex;
+    private List<Channel> channels = new ArrayList();
+    private final ChannelUpdator updator;
+    private Map<String, String> channelCategories;
     private String updatetime;
     private final long updateGap = 1000 * 60 * 60 * 24 * 30;
-    
-    public static synchronized ChannelManager sharedInstance(){
-        
-        if(instance == null){
-            
-            instance = (ChannelManager) restoreFromFile(ChannelManager.class);
-           
-            if(instance == null){
-                instance = new ChannelManager();
-            }
-        }
-        
-        return instance;
-    }
-    
-    private ChannelManager(){
+
+    protected ChannelManager(ChannelUpdator updator) {
         updatetime = null;
-        updators.add(new StableChannelsUpdator(this));
-        updators.add(new DynamicChannelsUpdator(this));
-        currentUpdatorIndex = 0;
+        this.updator = updator;
     }
 
     public List<Channel> getChannels() {
         return channels;
     }
-    
-    public Channel getARandomChannel(){
-        int index = (int)(Math.random() * this.channels.size());
+
+    public Channel getARandomChannel() {
+        int index = (int) (Math.random() * this.channels.size());
         return channels.get(index);
     }
-    
-    
-    
+
     @Override
     public void start() {
-        
-        if(!shouldUpdate()){
+
+        if (!shouldUpdate()) {
             this.notifySubNodesReady();
-            return ;
+        } else {
+            updator.attemptToUpdate();
         }
-        
-        if(this.updators.size() > 0 && currentUpdatorIndex < this.updators.size()){
-            updators.get(currentUpdatorIndex).attemptToUpdate();
-        }
+
     }
 
     @Override
     public void didRecieveLatestChannelRecords(ChannelUpdateResult result) {
-       
-       currentUpdatorIndex++;
-       
-       
-       this.channelCategories = result.getCategory();
-       this.channels.addAll(result.getChannels());
-       
-       if(currentUpdatorIndex >= this.updators.size()){
-           updatetime = new TimeTool().getCurrentTime();
-           this.notifySubNodesReady();
-           currentUpdatorIndex = 0;
-//           System.out.print(this.channels.toString());
-       }else{
-           this.start();
-       }
-       
+
+        this.channelCategories = result.getCategory();
+        this.channels = result.getChannels();
+        this.notifySubNodesReady();
+
     }
-    
-    
-    private boolean shouldUpdate(){
-        
-        if(updatetime == null){
+
+    private boolean shouldUpdate() {
+
+        if (updatetime == null) {
             return true;
         }
-        
+
         TimeTool tt = new TimeTool();
         String uTime = updatetime;
         String cTime = tt.getCurrentTime();
         long gap = tt.calculateDiscance(uTime, cTime);
-        
-        if((gap >= this.updateGap) || (gap <= 0)){
+
+        if ((gap >= this.updateGap) || (gap <= 0)) {
             return true;
         } else {
             return false;
         }
-          
+
     }
-    
-    public static void main(String[] args){
-        ChannelManager mgr = new ChannelManager();
-        mgr.start();
+
+    public static void main(String[] args) {
+//        ChannelManager mgr = new ChannelManager();
+//        mgr.start();
     }
 }

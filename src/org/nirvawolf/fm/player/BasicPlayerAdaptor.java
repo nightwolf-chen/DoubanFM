@@ -107,4 +107,5 @@ public class BasicPlayerAdaptor {
             Logger.getLogger(BasicPlayerAdaptor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
 }
