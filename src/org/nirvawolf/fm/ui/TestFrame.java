@@ -7,7 +7,6 @@
 package org.nirvawolf.fm.ui;
 
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -18,8 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.ScrollPaneLayout;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayerEvent;
@@ -65,7 +62,7 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
         List<Channel> dynamicChannels = DynamicChannelManager.sharedInstance().getChannels();
         
         for(Channel channel : stableChannels){       
-             this.jPanel3.add(new ChannelPanel(channel));
+             this.jPanel3.add(new ChannelPanel(channel,this.fmPlayer));
         }
         
         int rIndex = (int)(Math.random() * dynamicChannels.size());
@@ -75,7 +72,7 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
         
         for(int i = rIndex ; i< dynamicChannels.size() && targetNum>=0;i++){
             Channel channel = dynamicChannels.get(i);
-            this.jPanel4.add(new ChannelPanel(channel));
+            this.jPanel4.add(new ChannelPanel(channel,this.fmPlayer));
             targetNum--;
         }
     }
@@ -138,6 +135,12 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
 
         jLabel3.setText(" ");
 
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -189,7 +192,6 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
         );
 
         jLabel1.getAccessibleContext().setAccessibleName("JlabelImage");
-        jButton1.getAccessibleContext().setAccessibleName("暂停");
         jButton1.getAccessibleContext().setAccessibleDescription("");
 
         jTabbedPane1.addTab("播放器", jPanel1);
@@ -202,7 +204,7 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 172, Short.MAX_VALUE)
+            .addGap(0, 224, Short.MAX_VALUE)
         );
 
         jScrollPane1.setViewportView(jPanel3);
@@ -217,7 +219,7 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 172, Short.MAX_VALUE)
+            .addGap(0, 224, Short.MAX_VALUE)
         );
 
         jScrollPane2.setViewportView(jPanel4);
@@ -232,7 +234,7 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
+            .addGap(0, 228, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("登录", jPanel2);
@@ -249,7 +251,7 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -282,6 +284,11 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
         this.fmPlayer.stop();
         this.fmPlayer.next();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+        // TODO add your handling code here:
+        this.setVolume();
+    }//GEN-LAST:event_jSlider1StateChanged
 
     /**
      * @param args the command line arguments
@@ -355,8 +362,6 @@ public class TestFrame extends javax.swing.JFrame implements FMPlayerListener{
         this.showChannelInfo(this.fmPlayer.getCurrentChannel());
         
         if(!isChannelsLoad){
-            
-//            Thread thread = 
             this.initChannelsPanel();
             isChannelsLoad = true;
         }

@@ -4,7 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/Users/bruce/NetBeansProjects/DoubanFM/src/org/nirvawolf/fm/ui/TestFrame.java</file>
-            <file>file:/Users/bruce/NetBeansProjects/DoubanFM/src/org/nirvawolf/fm/ui/PlayerMain.java</file>
+            <file>file:/Users/bruce/NetBeansProjects/DoubanFM/src/org/nirvawolf/fm/ui/FMPlayer.java</file>
+            <file>file:/Users/bruce/NetBeansProjects/DoubanFM/src/org/nirvawolf/fm/song/SongManager.java</file>
+            <file>file:/Users/bruce/NetBeansProjects/DoubanFM/src/org/nirvawolf/fm/ui/ChannelPanel.java</file>
         </group>
     </open-files>
 </project-private>
